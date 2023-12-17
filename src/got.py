@@ -29,18 +29,25 @@ def lee_batallas(ruta_fichero:int)->List[Tuple[BatallaGOT]]:
 def reyes_mayor_menor_ejercito(batallas:list[BatallaGOT])->Tuple[str, str]:
     dic_reyes = defaultdict(int)
     for i in batallas:
-        dic_reyes[i.rey_atacante]+=1
-        dic_reyes[i.rey_atacado]+=1
+        if i.num_atacantes != None:
+            dic_reyes[i.rey_atacante]+=i.num_atacantes
+        if i.num_atacados != None:
+            dic_reyes[i.rey_atacado]+=i.num_atacados
     return (max(dic_reyes.items(), key = lambda x:x[1])[0], min(dic_reyes.items(), key = lambda x:x[1])[0])
 
-def batallas_mas_comandantes(batallas:list[BatallaGOT], regiones:set=None, n_batallas:int=None)->\
-    List[Tuple[str, int]]:
+def batallas_mas_comandantes(batallas:list[BatallaGOT], regiones:Optional[set[str]]=None,\
+                            n_batallas:Optional[int]=None)->List[Tuple[str, int]]:
     dic_batalla = defaultdict(int)
     for i in batallas:
         if regiones == None or i.region in regiones:
             dic_batalla[i.nombre]+=len(i.comandantes_atacantes)
             dic_batalla[i.nombre]+=len(i.comandantes_atacados)
-    return (sorted(dic_batalla.items(), key = lambda x:x[1], reverse = True))[:n_batallas]
+    #dic_batalla = {i.nombre: len(i.comandantes_atacantes) + len(i.comandantes_atacados)\
+    #            for i in batallas if regiones == None or i.region in regiones}
+    res = sorted(dic_batalla.items(), key = lambda x:x[1], reverse = True)
+    if n_batallas!= None:
+        res = res[:n_batallas]
+    return res
 
 def rey_mas_victorias(batallas:list[BatallaGOT], rol:str="ambos")->str:
     dic_gana = defaultdict(list)
@@ -52,15 +59,19 @@ def rey_mas_victorias(batallas:list[BatallaGOT], rol:str="ambos")->str:
             dic_gana[i.rey_atacado].append(0)
     for c,v in dic_gana.items():
         if rol.lower() == "ambos":
-            dic_res[c] == len(v)
+            dic_res[c] = len(v)
         if rol.lower() == "atacante":
             dic_res[c] = sum(v)
         if rol.lower() == "atacado":
-            dic_res[c] == len(v) - sum(v)
-    return (max(dic_res.items(), key = lambda x:x[1]))[0]
+            dic_res[c] = len(v) - sum(v)
+    return (max(dic_res.items(), key = lambda x:x[1]))
 
 def rey_mas_victorias_por_region(batallas:list[BatallaGOT], rol:str="ambos")->Dict[str, set[str]]:
-    dic_region = defaultdict(set)
+    dic_regiones = defaultdict(list)
     for i in batallas:
-        dic_region[i.region].add(rey_mas_victorias(batallas, rol))
-    return dic_region 
+        dic_regiones[i.region].append(i)
+    dic_res = {region: rey_mas_victorias(batallas, rol) for region, batallas in dic_regiones.items()}
+    for c,v in dic_res.items():
+        if v[1] == 0:
+            dic_res[c] = None
+    return dic_res

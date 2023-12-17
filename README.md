@@ -44,20 +44,72 @@ BatallaGOT = NamedTuple('BatallaGOT',
 
 Cree un módulo **got.py** e implemente en él las funciones que se piden. Utilice *typing* para definir el tipo de los parámetros y el tipo de devolución de cada función. Implemente los tests correspondientes en el módulo **got_test.py**; las puntuaciones indicadas para cada ejercicio incluyen la realización de dicho test.
 
-1.	**lee_batallas**: lee un fichero de entrada en formato CSV codificado en utf-8 y devuelve una lista de tuplas de tipo ``BatallaGOT`` conteniendo todos los datos almacenados en el fichero. Use el método de cadenas ``split`` para separar los comandantes atacantes y atacados, y el método de cadenas ``strip`` para eliminar los espacios al inicio o final de los nombres de los comandantes. 
-Por ejemplo, el último elemento de la lista devuelta debe ser:
+1.	**lee_batallas** _(1,25 puntos)_: lee un fichero de entrada en formato CSV codificado en utf-8 y devuelve una lista de tuplas de tipo ``BatallaGOT`` conteniendo todos los datos almacenados en el fichero. Use el método de cadenas ``split`` para separar los comandantes atacantes y atacados, y el método de cadenas ``strip`` para eliminar los espacios al inicio o final de los nombres de los comandantes.
+
+Resultado esperado:
 ```
-BatallaGOT(nombre='Siege of Raventree', rey_atacante='Joffrey Baratheon', rey_atacado='Robb Stark', gana_atacante=True, muertes_principales=False, comandantes_atacantes=['Jonos Bracken', 'Jaime Lannister'], comandantes_atacados=['Tytos Blackwood'], region='The Riverlands', num_atacantes=1500, num_atacados=None).
+1. test_lee_batallas
+Primera batalla: BatallaGOT(nombre='Battle of the Golden Tooth', rey_atacante='Joffrey/Tommen Baratheon', rey_atacado='Robb Stark', gana_atacante=True, muertes_principales=True, comandantes_atacantes=['Jaime Lannister'], comandantes_atacados=['Clement Piper', 'Vance'], region='The Westerlands', num_atacantes=15000, num_atacados=4000)
+
+Cuarta batalla: BatallaGOT(nombre='Battle of the Green Fork', rey_atacante='Robb Stark', rey_atacado='Joffrey/Tommen Baratheon', gana_atacante=False, muertes_principales=True, comandantes_atacantes=['Roose Bolton', 'Wylis Manderly', 'Medger Cerwyn', 'Harrion Karstark', 'Halys Hornwood'], comandantes_atacados=['Tywin Lannister', 'Gregor Clegane', 'Kevan Lannister', 'Addam Marbrand'], region='The Riverlands', num_atacantes=18000, num_atacados=20000)
+
+Última batalla: BatallaGOT(nombre='Siege of Raventree', rey_atacante='Joffrey/Tommen Baratheon', rey_atacado='Robb Stark', gana_atacante=True, muertes_principales=False, comandantes_atacantes=['Jonos Bracken', 'Jaime Lannister'], comandantes_atacados=['Tytos Blackwood'], region='The Riverlands', num_atacantes=1500, num_atacados=None)
 ```
-_(1,25 puntos)_
+2.	**reyes_mayor_menor_ejercito** _(2 puntos)_: recibe una lista de tuplas de tipo ``BatallaGOT`` y devuelve una tupla con dos cadenas correspondientes a los nombres de los reyes con el mayor y el menor ejército, respectivamente, del acumulado de todas las batallas. Para calcular el tamaño del ejército de un rey se deben sumar los números de atacantes o de atacados de todas las batallas en las que ha participado dicho rey como atacante o como atacado. __
 
-2.	**reyes_mayor_menor_ejercito**: recibe una lista de tuplas de tipo ``BatallaGOT`` y devuelve una tupla con dos cadenas correspondientes a los nombres de los reyes con el mayor y el menor ejército, respectivamente, del acumulado de todas las batallas. Para estimar el tamaño del ejército de un rey se deben sumar los números de atacantes o de atacados de todas las batallas en las que ha participado dicho rey como atacante o como atacado. _(2 puntos)_
+Resultado esperado:
+```
+2. test_reyes_mayor_menor_ejercito
+('Stannis Baratheon', 'Mance Rayder')
+```
 
-3.	**batallas_mas_comandantes**: recibe una lista de tuplas de tipo ``BatallaGOT``, un conjunto de cadenas ``regiones``, con valor por defecto ``None``, y un valor entero ``n`` con valor por defecto ``None``, y devuelve una lista de tuplas ``(str, int)`` con los nombres y el total de comandantes participantes de aquellas n batallas con mayor número de comandantes participantes (tanto atacantes como atacados), llevadas a cabo en alguna de las regiones indicadas en el parámetro regiones. Si el parámetro ``regiones`` es ``None`` se considerarán todas las regiones; por su parte, si el parámetro ``n`` es ``None`` se devolverán las tuplas correspondientes a todas las batallas de las regiones escogidas. En todos los casos, la lista devuelta estará ordenada de mayor a menor número de comandantes. Por ejemplo, si la función recibe la lista completa de batallas contenida en el CSV, y si ``regiones`` es `{'The North', 'The Riverlands'}` y ``n`` es ``4``, la función devuelve ``[('Battle of the Green Fork', 9), ('Battle of the Fords', 9), ('Battle of the Camps', 5), ('Sack of Winterfell', 5)]``. _(2 puntos)_
+3.	**batallas_mas_comandantes** _(2 puntos)_: recibe una lista de tuplas de tipo ``BatallaGOT``, un conjunto de cadenas ``regiones``, con valor por defecto ``None``, y un valor entero ``n`` con valor por defecto ``None``, y devuelve una lista de tuplas ``(str, int)`` con los nombres y el total de comandantes participantes de aquellas n batallas con mayor número de comandantes participantes (tanto atacantes como atacados), llevadas a cabo en alguna de las regiones indicadas en el parámetro regiones. Si el parámetro ``regiones`` es ``None`` se considerarán todas las regiones; por su parte, si el parámetro ``n`` es ``None`` se devolverán las tuplas correspondientes a todas las batallas de las regiones escogidas. En todos los casos, la lista devuelta estará ordenada de mayor a menor número de comandantes. 
 
-4.	**rey_mas_victorias**: recibe una lista de tuplas de tipo ``BatallaGOT`` y una cadena ``rol``, con valor por defecto ``"ambos"``, y devuelve el nombre del rey que acumula más victorias. Tenga en cuenta que un rey puede ganar una batalla en la que actúa como atacante, en cuyo caso el campo ``gana_atacante`` será ``True``, o una batalla en la que actúa como atacado, en cuyo caso el campo ``gana_atacante`` será ``False``. Si el parámetro ``rol`` es igual a ``"atacante"``, se devolverá el nombre del rey que acumula más victorias como atacante; si ``rol`` es igual a ``"atacado"``, se devolverá el nombre del rey que acumula más victorias como atacado; si ``rol`` es igual a ``"ambos"``, se devolveré el nombre del rey que acumula más victorias en todas las batallas en las que ha participado (sumando sus victorias como atacante y como atacado). Si ningún rey acumula victorias del rol especificado en la lista de batallas recibida, la función devuelve ``None``. Por ejemplo, si el parámetro rol contiene ``"ambos"`` y la función devuelve ``"Stannis Baratheon"``, significa que dicho rey es el que ha ganado más batallas de la lista de batallas recibida, sumando tanto las victorias en batallas en las que fue atacante, como las victorias en batallas en las que fue atacado. _(2,75 puntos)_
+Resultado esperado para las regiones {'The North', 'The Riverlands'} y n=4:
+```
+3. test_batallas_mas_comandantes:
+[('Battle of the Green Fork', 9), ('Battle of the Fords', 9), ('Battle of the Camps', 5), ('Sack of Winterfell', 5)]. 
+```
+4.	**rey_mas_victorias** _(2,75 puntos)_: recibe una lista de tuplas de tipo ``BatallaGOT`` y una cadena ``rol``, con valor por defecto ``"ambos"``, y devuelve una tuplas con el nombre del rey que acumula mas victorias y el número de victorias conseguidas. Tenga en cuenta que un rey puede ganar una batalla en la que actúa como atacante, en cuyo caso el campo ``gana_atacante`` será ``True``, o una batalla en la que actúa como atacado, en cuyo caso el campo ``gana_atacante`` será ``False``. Si el parámetro ``rol`` es igual a ``"atacante"``, se devolverá el nombre del rey que acumula más victorias como atacante; si ``rol`` es igual a ``"atacado"``, se devolverá el nombre del rey que acumula más victorias como atacado; si ``rol`` es igual a ``"ambos"``, se devolveré el nombre del rey que acumula más victorias en todas las batallas en las que ha participado (sumando sus victorias como atacante y como atacado). Si ningún rey acumula victorias del rol especificado en la lista de batallas recibida, la función devuelve ``None``.
 
-5.	**rey_mas_victorias_por_region**: recibe una lista de tuplas de tipo ``BatallaGOT`` y una cadena ``rol``, con valor por defecto ``"ambos"``, y devuelve un diccionario que relaciona cada región con el nombre del rey o reyes que acumula más victorias en batallas ocurridas en esa región. El parámetro ``rol`` tiene el mismo significado que en la función anterior. Si para alguna región no hay ningún rey que haya ganado una batalla con el rol especificado, en el diccionario aparecerá el valor ``None`` asociado a dicha región. Puede usar la función ``rey_mas_victorias`` para resolver este ejercicio. 
-Por ejemplo, si pasamos a la función la lista completa de batallas contenida en el CSV, y el parámetro ``rol`` contiene ``"ambos"``, la función devuelve un diccionario que, entre otros ítems, asocia la clave ``"The Stormlands"`` a ``"Joffrey Baratheon"``; esto significa que dicho rey es el que ganó más batallas de entre las batallas ocurridas en "The Stormlands", sumando tanto las victorias en batallas en las que fue atacante, como las victorias en batallas en las que fue atacado. _(2 puntos)_
+Resultado esperado:
 
+```
+4. test_rey_mas_victorias
+El rey con mas victorias es: ('Joffrey/Tommen Baratheon', 15)
+El rey atacante con más victorias es: ('Joffrey/Tommen Baratheon', 12)
+El rey atacado con más victorias es: ('Joffrey/Tommen Baratheon', 3)
+```
 
+5.	**rey_mas_victorias_por_region** _(2 puntos)_: recibe una lista de tuplas de tipo ``BatallaGOT`` y una cadena ``rol``, con valor por defecto ``"ambos"``, y devuelve un diccionario que relaciona cada región con el nombre del rey o reyes que acumula más victorias en batallas ocurridas en esa región. El parámetro ``rol`` tiene el mismo significado que en la función anterior. Si para alguna región no hay ningún rey que haya ganado una batalla con el rol especificado, en el diccionario aparecerá el valor ``None`` asociado a dicha región. Puede usar la función ``rey_mas_victorias`` para resolver este ejercicio, pero recuerde que esta función puede devolver ``None`` en lugar de una tupla en la que estaría el que busca.
+
+Resultado esperado:
+```
+5. test_rey_mas_victorias_por_region
+Reyes con mas victorias por región
+The Westerlands --> Robb Stark
+The Riverlands --> Joffrey/Tommen Baratheon
+The North --> Balon/Euron Greyjoy
+The Stormlands --> Joffrey/Tommen Baratheon
+The Crownlands --> Joffrey/Tommen Baratheon
+Beyond the Wall --> Mance Rayder
+The Reach --> Balon/Euron Greyjoy
+
+Reyes atacantes con mas victorias por región
+The Westerlands --> Robb Stark
+The Riverlands --> Joffrey/Tommen Baratheon
+The North --> Balon/Euron Greyjoy
+The Stormlands --> Joffrey/Tommen Baratheon
+The Crownlands --> None
+Beyond the Wall --> None
+The Reach --> Balon/Euron Greyjoy
+
+Reyes atacados con mas victorias por región
+The Westerlands --> None
+The Riverlands --> Joffrey/Tommen Baratheon
+The North --> None
+The Stormlands --> None
+The Crownlands --> Joffrey/Tommen Baratheon
+Beyond the Wall --> Mance Rayder
+The Reach --> None
+```

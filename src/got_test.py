@@ -19,12 +19,26 @@ def test_batallas_mas_comandantes(datos:list[BatallaGOT]):
 def test_rey_mas_victorias(datos:list[BatallaGOT]):
     print("\ntest_rey_mas_victorias")
     rol = "ambos"
-    print(rey_mas_victorias(datos, rol))
+    print(f"El rey con mas victoris es: {rey_mas_victorias(datos, rol)}")
+    rol = "atacante"
+    print(f"El rey atacante con mas victoris es: {rey_mas_victorias(datos, rol)}")
+    rol = "atacado"
+    print(f"El rey atacado con mas victoris es: {rey_mas_victorias(datos, rol)}")
 
 def test_rey_mas_victorias_por_region(datos:list[BatallaGOT]):
     print("\ntest_rey_mas_victorias_por_region")
+    print("\nReyes con mas victorias por region")
     rol = "ambos"
-    print(rey_mas_victorias_por_region(datos, rol))
+    for c,v in rey_mas_victorias_por_region(datos, rol).items():
+        print(f"{c} --> {v}")
+    print("\nReyes atacantes con mas victorias por region")
+    rol = "atacante"
+    for c,v in rey_mas_victorias_por_region(datos, rol).items():
+        print(f"{c} --> {v}")
+    print("\nReyes atacados con mas victorias por region")
+    rol = "atacado"
+    for c,v in rey_mas_victorias_por_region(datos, rol).items():
+        print(f"{c} --> {v}")
 
 if __name__=="__main__":
     datos = lee_batallas("data/battles.csv")
